@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Firebase Form with Google Auth</title>
+    <link rel="stylesheet" href="login.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="box">
+        <div class="form">
+            <h2>Login Form</h2>
+            <form id="login-form">
+                <div class="inputbox">
+                    <input type="text" id="username" required>
+                    <span>Username</span>
+                </div>
+                <div class="inputbox">
+                    <input type="email" id="email" required>
+                    <span>Email</span>
+                </div>
+                <div class="inputbox">
+                    <input type="text" id="phone" required>
+                    <span>Phone Number</span>
+                </div>
+                <input type="submit" value="Submit" class="sub" id="submit">
+            </form>
+            <button id="google-sign-in">Sign in with Google</button>
+        </div>
+    </div>
+
+    <script type="module">
+        // Import Firebase SDK
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-app.js";
+        import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-database.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-auth.js";
+
+        // Your Firebase config
+        const firebaseConfig = {
+            apiKey: "AIzaSyBp8leWWIEEn-7hFzIvlVux5QtQotjb3dc",
+            authDomain: "login-to-cryptcrunch.firebaseapp.com",
+            databaseURL: "https://login-to-cryptcrunch-default-rtdb.firebaseio.com",
+            projectId: "login-to-cryptcrunch",
+            storageBucket: "login-to-cryptcrunch.firebasestorage.app",
+            messagingSenderId: "589867971531",
+            appId: "1:589867971531:web:eac9f5d3394c4e16a47c4e"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const auth = getAuth(app);
+
+        // Google sign-in function
+        const googleSignInButton = document.getElementById("google-sign-in");
+        googleSignInButton.addEventListener('click', function() {
+            const provider = new GoogleAuthProvider();
+
+            function loadProgress(userId) {
+                const progressRef = ref(db, 'progress/' + userId);
+                get(progressRef)
+                    .then((snapshot) => {
+                        if (snapshot.exists()) {
+                            const userProgress = snapshot.val();
+                            sessionStorage.setItem('currentLevel', userProgress.level);  // Save level to session
+                            console.log("Progress loaded:", userProgress.level);
+                        } else {
+                            sessionStorage.setItem('currentLevel', 1);  // Default to level 1 if no progress found
+                            console.log("No progress found, starting at level 1.");
+                        }
+                    }).catch(error => {
+                        console.error("Error loading progress:", error);
+                    });
+            }
+
+            signInWithPopup(auth, provider)
+                .then((result) => {
+                    const user = result.user;
+                    console.log("Sign-in successful:", user);
+        
+                    // Save user ID to sessionStorage to use in other files
+                    sessionStorage.setItem('userId', user.uid);
+
+                    // Load progress after login
+                    loadProgress(user.uid);
+
+                    // Redirect to main page
+                    window.location.href = "home.html";
+                })
+                .catch((error) => {
+                    console.error("Error during sign-in:", error);
+                    googleSignInButton.disabled = false; // Re-enable the button if there's an error
+                });
+        });
+
+        // Handle form submission without Google Auth
+        document.getElementById("submit").addEventListener('click', function(e){
+              e.preventDefault();
+              set(ref(db, 'user/' + document.getElementById("username").value),
+              {
+   
+                username: document.getElementById("username").value,
+                email: document.getElementById("email").value,
+                PhoneNumber: document.getElementById("phone").value
+
+              });
+                alert("Login Sucessfull  !");
+                window.location.href = "home.html";
+             })
+    </script>
+</body>
+</html>

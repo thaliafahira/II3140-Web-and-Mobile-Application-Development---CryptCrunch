@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Cryptorihm</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="return-button"></div>
+    <div class="title-box">Level 3</div>
+    <audio autoplay loop>
+        <source src="Audio/positive-kids-116684.mp3">
+        This browser does not support HTML 5 audios
+    </audio>
+    <button id="level-button">Level</button>
+
+    <div id="popup" class="level-bg-hidden"> 
+        <div id="levelModal" class="modal">
+            <div class="modal-content">
+                <h1>Select Level</h1>
+                <div class="level-selection">
+                    <button id="level1" class="level-btn">Level 1</button>
+                    <button id="level2" class="level-btn" disabled>Level 2</button>
+                    <button id="level3" class="level-btn" disabled>Level 3</button>
+                </div>
+                
+                <button id="close-level-button" class="close">Close</button>
+            </div>
+        </div>
+    </div>
+
+        <img src="images/3.png" alt="Description of the image" id="myImage">
+    <section id="input-section">
+        <input type="text" id="userInput" placeholder="Type your answer here..">
+        <button id="submitBtn" class="submit">Submit</button>
+    </section>
+
+    <div id="completionModal" class="popup">
+        <div class="popup-content">
+            <div class="popup-header">
+                <span class="congrats-label">Congrats!</span>
+            </div>
+            <p>Well done, you've completed all the levels</p>
+            <button id="homeBtn" class="home-button">
+                <span class="home-icon">🏠</span> Home
+            </button>
+        </div>
+    </div>
+
+    <div id="errorModal" class="popup">
+        <div class="popup-content">
+            <p>Wrong answer</p>
+            <button id="tryAgainBtn" class="try-again-button">Try again!</button>
+        </div>
+    </div>
+
+    
+    <canvas id="canvas"></canvas>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.min.js"></script>
+    <script type="module" src="./Level.js"></script>
+</body>
+</html>
